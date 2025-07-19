@@ -1,21 +1,13 @@
+#ifndef METHODS_H
+#define METHODS_H
 
-void setupCurrentTime(const WifiParameters& wifiParams)
-{
-  WiFi.mode(WIFI_STA);
-  
-  WiFi.begin(wifiParams.Ssid, wifiParams.Pass, 6);
-  
-  while (WiFi.status() != WL_CONNECTED) 
-  {
-    delay(wifiWaitDelay);
-  }
-  
-  // we need a reasonable accurate time for TOTP to work.
-  configTzTime(NTP_DEFAULT_TZ, NTP_SERVER);
-}
 
-int getSecondsOfMinute(time_t t_time) 
-{
-    struct tm* timeinfo = localtime(&t_time);
-    return timeinfo->tm_sec;
-}
+#include "wifi_parameters.h"
+
+void setupCurrentTime(const WifiParameters& wifiParams);
+
+int getSecondsOfMinute(time_t t_time);
+
+void listDir(const char *dirname, uint8_t levels);
+
+#endif // METHODS_H

@@ -130,8 +130,8 @@ void loop() {}
   
 ## Setup
 
-  - credential storage (interface)
-  - loading credentials from SD card
+  - [x] credential storage (interface)
+  - [x] loading credentials from SD card
   - wifi time sync
 
 ## Visualization

@@ -4,6 +4,14 @@
 #include <LittleFS.h>
 #include <SD.h>
 
+
+#define LILYGO_T5_V213
+
+#include <boards.h>
+
+// Create SPI instance
+SPIClass sdSPI(HSPI); // todo; move to sdappsettingsstorage
+
 bool FSAppSettingsStorage::init()
 {
    if (!LittleFS.begin()) 
@@ -64,9 +72,12 @@ bool FSAppSettingsStorage::save(const AppParameters& params)
   return true;
 }
 
+
 bool SDAppSettingsStorage::init()
 {
-  return SD.begin();
+  sdSPI.begin(SDCARD_SCLK, SDCARD_MISO, SDCARD_MOSI);
+ 
+  return SD.begin(SDCARD_CS, sdSPI);
 }
 
 std::optional<AppParameters> SDAppSettingsStorage::load()

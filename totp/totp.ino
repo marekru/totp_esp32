@@ -3,7 +3,6 @@
 // TODO: load time/secret/wifi from file or load time from ntp
 // TODO: OTP countdown (e.g. dots under name or behind?)
 
-#include "defines.h"
 #include "includes.h"
 #include "constants.h"
 #include "globals.h"
@@ -22,8 +21,6 @@ void setup(void)
   {
     Serial.println("Failed to load app settings.");
   }
-
-  SPI.begin(EPD_SCLK, EPD_MISO, EPD_MOSI);
 
   renderer.init();
 
@@ -56,6 +53,11 @@ void loop()
   Serial.println(*otp);
   Serial.println(currentOtp == nullptr ? "<null>" : *currentOtp);
   Serial.println();
+
+  if (currentOtp == nullptr)
+  {
+    renderer.clear();
+  }
 
   if (currentOtp == nullptr || *currentOtp != *otp)
   {

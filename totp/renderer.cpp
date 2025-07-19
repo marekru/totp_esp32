@@ -6,6 +6,8 @@
 
 void Renderer::init()
 {
+  _displaySPI.begin(EPD_SCLK, EPD_MISO, EPD_MOSI);
+
   _display.init(); // enable diagnostic output on Serial
   _display.setRotation(1);
   _display.setFont(&FreeMonoBold12pt7b); // TODO:
@@ -14,7 +16,7 @@ void Renderer::init()
 void Renderer::show()
 {
   _display.update();
-  _display.powerDown(); // we can power down display until next update (which should poweron display again)
+  //_display.powerDown(); // we can power down display until next update (which should poweron display again)
 }
 
 void Renderer::clear()
@@ -26,9 +28,11 @@ void Renderer::renderText(String* text, int posx, int posy)
 {
   if (_renderTextWithBkg)
   {
+    //clear(); // temporary fix
+
     int16_t nX = 0, nY = 0;
     uint16_t nWidth = 0, nHeight = 0;
-    _display.getTextBounds(text->c_str(), 0, 0, &nX, &nY, &nWidth, &nHeight);
+    _display.getTextBounds(text->c_str(), posx, posy, &nX, &nY, &nWidth, &nHeight);
     _display.fillRect(nX, nY, nWidth, nHeight, _bkgColor);
   }
 

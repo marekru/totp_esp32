@@ -1,8 +1,8 @@
-
 #ifndef INCLUDES_H
 #define INCLUDES_H
 
-#include <WiFi.h>
+#define LILYGO_T5_V213
+
 // TODO: #include <NTPClient.h> see TOTP library example
 #include <TOTP-RC6236-generator.hpp>
 

@@ -11,6 +11,7 @@ struct AppParameters
   public:
     WifiParameters Wifi;
     TotpParameters Totp;
+    bool ForceConfigRewrite = false;
 };
 
 class AppParametersParser 
@@ -54,6 +55,8 @@ template<typename T> std::optional<AppParameters> AppParametersParser::parse(T j
     params.Totp.Period = totp["Period"] | 30; // Default to 30 seconds
     params.Totp.Secret = totp["Secret"] | "";
   }
+
+  params.ForceConfigRewrite = doc["ForceConfigRewrite"] | false;
 
   return params;
 }

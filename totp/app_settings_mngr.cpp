@@ -1,5 +1,6 @@
 #include "app_settings_mngr.h"
 #include "app_settings_storage.h"
+#include "methods.h"
 
 const char* SettingsPath = "/config.json";
 
@@ -13,37 +14,45 @@ bool AppSettingsManager::init()
 {
   if (!_internalStorage->init())
   {
-    return false;
-  }
-
-  if (!_externalStorage->init())
-  {
+    Serial.println("Failed to init internal storage.");
+    
     return false;
   }
 
   std::optional<AppParameters> internalAppParams = _internalStorage->load();
-  
-  // TODO: force rewrite internal params!!!
-  if (internalAppParams.has_value())
+
+  if (_externalStorage->init())
   {
-    _settings = internalAppParams.value();
-    return true;
+    Serial.println("External storage initialized.");
+
+    std::optional<AppParameters> externalAppParams = _externalStorage->load();
+
+    // new params are available and (old are not available or we can rewrite it)
+    if (externalAppParams.has_value() && (!internalAppParams.has_value() || externalAppParams.value().ForceConfigRewrite))
+    {
+      if (_internalStorage->save(externalAppParams.value()))
+      {
+        Serial.println("Saved new app settings to internal storage.");
+        _settings = externalAppParams.value();
+        return true;
+      }
+      else
+      {
+        Serial.println("Failed to save new app settings.");
+      }
+    }
   }
   else 
   {
-    std::optional<AppParameters> externalAppParams = _externalStorage->load();
-    
-    if (externalAppParams.has_value())
-    {
-      if (!_internalStorage->save(externalAppParams.value()))
-      {
-        // TODO: log error
-        return false;
-      }
+    Serial.println("Failed to init external storage.");
+  }
 
-      _settings = externalAppParams.value();
-      return true;
-    }
+  if (internalAppParams.has_value())
+  {
+    Serial.println("Loaded app settings.");
+
+    _settings = internalAppParams.value();
+    return true;
   }
 
   return false;

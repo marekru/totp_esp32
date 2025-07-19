@@ -1,7 +1,7 @@
 #ifndef RENDERER_H
 #define RENDERER_H
 
-#include "defines.h"
+#define LILYGO_T5_V213
 
 #include <boards.h>
 #include <GxEPD.h>
@@ -14,6 +14,7 @@
 class Renderer
 {
   private:
+    SPIClass _displaySPI;
     GxIO_Class _io;
     GxEPD_Class _display;
     int _textColor = GxEPD_BLACK;
@@ -21,7 +22,7 @@ class Renderer
     bool _renderTextWithBkg = true;
   public:
 
-  Renderer() : _io(SPI, EPD_CS, EPD_DC, EPD_RSET), _display(_io, EPD_RSET, EPD_BUSY) {}
+  Renderer() : _displaySPI(VSPI), _io(_displaySPI, EPD_CS, EPD_DC, EPD_RSET), _display(_io, EPD_RSET, EPD_BUSY) {}
 
   void init();
 
